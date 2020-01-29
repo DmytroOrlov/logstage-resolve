@@ -5,8 +5,7 @@ import java.util.concurrent.ThreadPoolExecutor
 import cats.effect.{Async, Blocker, Concurrent, ConcurrentEffect, ContextShift, Sync, Timer}
 import distage.Id
 import distage.plugins.PluginDef
-//import izumi.distage.effect.modules.ZIODIEffectModule
-import izumi.distage.monadic.modules.ZIODIEffectModule
+import izumi.distage.effect.modules.ZIODIEffectModule
 import logstage.LogBIO
 import myapp.Bracket2
 import org.http4s.metrics.prometheus.PrometheusExportService

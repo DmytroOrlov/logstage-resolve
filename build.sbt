@@ -1,21 +1,20 @@
-import java.nio.file.Files
-
 import Version._
 
 val V = new {
-  val distage = "0.9.17"
-  val tapir = "0.12.7"
-  val sttp = "2.0.0-RC4"
+  val distage = "0.10.0"
+  val tapir = "0.12.17"
+  val sttp = "2.0.0-RC7"
   val zio = "1.0.0-RC17"
   val zioCats = "2.0.0.0-RC10"
-  val zioMacros = "0.6.0"
+  val zioMacros = "0.6.2"
 
   val scalatest = "3.1.0"
-  val scalacheck = "1.14.2"
-  val http4s = "0.21.0-M6"
+  val scalacheck = "1.14.3"
+  val http4s = "0.21.0-RC2"
   val kindProjector = "0.11.0"
   val circeDerivation = "0.12.0-M7"
-  val cats = "2.0.0"
+  val cats = "2.1.0"
+  val catsEffect = "2.0.0"
   val circe2_12 = "0.11.2"
   val circe: Version = {
     case Some((2, 13)) => "0.12.3"
@@ -25,22 +24,21 @@ val V = new {
     case Some((2, 13)) => "0.12.2"
     case _ => circe2_12
   }
-  val refined = "0.9.10"
+  val refined = "0.9.12"
   val commonsText = "1.8"
-  val chimney = "0.3.5"
+  val chimney = "0.4.0"
   val scalaCsv = "1.3.6"
   val betterMonadicFor = "0.3.1"
-  val prometheus = "0.8.0"
+  val prometheus = "0.8.1"
 }
 
 val Deps = new {
   val scalatest = "org.scalatest" %% "scalatest" % V.scalatest
   val scalacheck = "org.scalacheck" %% "scalacheck" % V.scalacheck
 
-  val distageCore = "io.7mind.izumi" %% "distage-core" % V.distage
-  val distageRoles = "io.7mind.izumi" %% "distage-roles" % V.distage
-  val distageConfig = "io.7mind.izumi" %% "distage-config" % V.distage
-  val distageTestkit = "io.7mind.izumi" %% "distage-testkit" % V.distage
+  val distageFramework = "io.7mind.izumi" %% "distage-framework" % V.distage
+  val distageTestkitScalatest = "io.7mind.izumi" %% "distage-testkit-scalatest" % V.distage
+  val distageConfig = "io.7mind.izumi" %% "distage-extension-config" % V.distage
   val logstageCore = "io.7mind.izumi" %% "logstage-core" % V.distage
 
   val http4sDsl = "org.http4s" %% "http4s-dsl" % V.http4s
@@ -103,10 +101,9 @@ lazy val `myapp` = (project in file("."))
       "io.circe" %% "circe-refined" % V.circe(_),
       "io.circe" %% "circe-generic-extras" % V.circeExtras(_),
     ) ++ Seq(
-      Deps.distageCore,
-      Deps.distageRoles,
+      Deps.distageFramework,
       Deps.distageConfig,
-      Deps.distageTestkit % Test,
+      Deps.distageTestkitScalatest % Test,
       Deps.scalatest % Test,
       Deps.scalacheck % Test,
       Deps.http4sDsl,
@@ -123,7 +120,7 @@ lazy val `myapp` = (project in file("."))
       Deps.zioMacros,
 
       "org.typelevel" %% "cats-core" % V.cats,
-      "org.typelevel" %% "cats-effect" % V.cats,
+      "org.typelevel" %% "cats-effect" % V.catsEffect,
 
       Deps.asyncHttpClientBackendZio,
       Deps.tapirSttpClient % Test,
@@ -133,15 +130,11 @@ lazy val `myapp` = (project in file("."))
       "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-http4s" % V.tapir,
 
       Deps.logstageCore,
+      "io.7mind.izumi" %% "logstage-api" % V.distage,
       "io.7mind.izumi" %% "logstage-rendering-circe" % V.distage,
-      // Router from Slf4j to LogStage
       "io.7mind.izumi" %% "logstage-adapter-slf4j" % V.distage,
-      // Configure LogStage with Typesafe Config
-      "io.7mind.izumi" %% "logstage-config" % V.distage,
-      // LogStage integration with DIStage
-      "io.7mind.izumi" %% "logstage-di" % V.distage,
-      // Router from LogStage to Slf4J
       "io.7mind.izumi" %% "logstage-sink-slf4j" % V.distage,
+      "io.7mind.izumi" %% "distage-extension-logstage" % V.distage,
 
       "org.apache.commons" % "commons-text" % V.commonsText,
       "eu.timepit" %% "refined" % V.refined,
